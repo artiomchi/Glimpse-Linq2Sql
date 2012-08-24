@@ -33,6 +33,7 @@ namespace FlexLabs.Glimpse.Linq2Sql
                 List<LogItem> items = context.Items[HttpItemID] as List<LogItem>;
                 items.Add(_lastLog = _curLog);
                 _curLog = new LogItem();
+                return;
             }
 
             _curLog.Command += value;

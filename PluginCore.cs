@@ -31,8 +31,8 @@ namespace FlexLabs.Glimpse.Linq2Sql
                 new object[] 
                 {
                     i,
-                    TimeSpanString(item.Time.Subtract(context.Timestamp)),
-                    item.Duration.HasValue ? TimeSpanString(item.Duration.Value) : null,
+                    String.Format("{0:#,0}", item.Time.Subtract(context.Timestamp).TotalMilliseconds),
+                    item.Duration.HasValue ? String.Format("{0:#,0}", item.Duration.Value.TotalMilliseconds) : null,
                     item.Command,
                     item.Params.Count > 0
                         ? new[]{new object[]{"Name","Type","Value"}}.Concat(item.Params.Select(p => new object[]
@@ -41,20 +41,10 @@ namespace FlexLabs.Glimpse.Linq2Sql
                                 p.Type,
                                 p.Value,
                             }))
-                        : "--" as object
+                        : null
                 }));
 
             return data;
-        }
-
-        private static String TimeSpanString(TimeSpan period)
-        {
-            var hours = period.Days * 24 + period.Hours;
-            return 
-                (hours > 0 ? period.Hours + " hrs, " : null) +
-                (hours > 0 || period.Minutes > 0 ? period.Minutes + " min, " : null) +
-                (hours > 0 || period.Minutes > 0 || period.Seconds > 0 ? period.Seconds + " sec, " : null) +
-                period.Milliseconds + " ms";
         }
 
         private static readonly GlimpseStructuredLayout _structuredLayout = new GlimpseStructuredLayout
@@ -64,17 +54,22 @@ namespace FlexLabs.Glimpse.Linq2Sql
                 new GlimpseStructuredLayoutCell
                 {
                     Data = 0,
-                    Width = "25px",
+                    Width = "30px",
                 },
                 new GlimpseStructuredLayoutCell
                 {
                     Data = 1,
-                    Width = "60px",
+                    Width = "75px",
+                    Align = "right",
+                    Prefix = "T+ ",
+                    Postfix = " ms",
                 },
                 new GlimpseStructuredLayoutCell
                 {
                     Data = 2,
-                    Width = "60px",
+                    Width = "65px",
+                    Align = "right",
+                    Postfix = " ms",
                 },
                 new GlimpseStructuredLayoutCell
                 {
@@ -82,11 +77,13 @@ namespace FlexLabs.Glimpse.Linq2Sql
                     Width = "65%",
                     IsCode = true,
                     CodeType = "sql",
+                    SuppressAutoPreview = false,
                 },
                 new GlimpseStructuredLayoutCell
                 {
                     Data = 4,
-                    Width = "100px",
+                    Width = "270px",
+                    Limit = 0,
                     Structure = new GlimpseStructuredLayout
                     {
                         new GlimpseStructuredLayoutSection
@@ -94,17 +91,17 @@ namespace FlexLabs.Glimpse.Linq2Sql
                             new GlimpseStructuredLayoutCell
                             {
                                 Data = 0,
-                                Width = "25px",
+                                Width = "50px",
                             },
                             new GlimpseStructuredLayoutCell
                             {
                                 Data = 1,
-                                Width = "35px",
+                                Width = "60px",
                             },
                             new GlimpseStructuredLayoutCell
                             {
                                 Data = 2,
-                                Width = "35px",
+                                Width = "120px",
                             },
                         },
                     }

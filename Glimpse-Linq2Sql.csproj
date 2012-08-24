@@ -63,7 +63,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuGet\FlexLabs.Glimpse.Linq2Sql.nuspec" />
+    <None Include="NuGet\tools\install.ps1" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NuGet\content\App_Readme\glimpse.linq2sql.readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
