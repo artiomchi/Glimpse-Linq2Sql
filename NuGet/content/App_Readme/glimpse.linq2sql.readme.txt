@@ -18,5 +18,8 @@ To enable support for Linq2SQL tracing you have to attach tracers to your contex
 
 Release Notes
 -------------
+25/08/2012 - 1.1
+- Parameter parser was missing parameters with negative sizes
+
 24/08/2012 - 1.0
 - Initial release of the plugin
