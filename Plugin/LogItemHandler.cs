@@ -39,7 +39,7 @@ namespace FlexLabs.Glimpse.Linq2Sql
 
             try
             {
-                var match = Regex.Match(value, @"-- @(\w+): \w+ (\w+) (\([\w\s=;]+\)) \[(.*)\].*");
+                var match = Regex.Match(value, @"-- @(\w+): \w+ (\w+) (\([\w\s=;-]+\)) \[(.*)\].*");
                 if (match.Success)
                 {
                     _curLog.Params.Add(new LogItem.Parameter
