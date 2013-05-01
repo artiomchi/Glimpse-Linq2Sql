@@ -1,117 +1,67 @@
-﻿using System;
+﻿using Glimpse.AspNet.Extensibility;
+using Glimpse.Core.Extensibility;
+using Glimpse.Core.Tab.Assist;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using Glimpse.Core.Extensibility;
 
 namespace FlexLabs.Glimpse.Linq2Sql
 {
-    [GlimpsePlugin]
-    internal class PluginCore : IGlimpsePlugin, IProvideGlimpseStructuredLayout
+    public class PluginCore : AspNetTab, ITabLayout
     {
-        public string Name
+        public override string Name
         {
             get { return "Linq2SQL"; }
         }
 
-        public void SetupInit()
+        public override object GetData(ITabContext context)
         {
-        }
+            var plugin = Plugin.Create("No", "Started", "Duration", "Command", "Parameters");
 
-        public object GetData(HttpContextBase context)
-        {
-            List<LogItem> items = LogItemHandler.GetLogList(context);
-            if (items == null)
-                return null;
+            var requestContext = context.GetRequestContext<HttpContextBase>();
+            List<LogItem> items = LogItemHandler.GetLogList(requestContext);
 
-            var data = new List<object[]> { new[] { "No", "Started", "Duration", "Command", "Parameters" } };
-            data.AddRange(items.Select((item, i) =>
-                new object[] 
-                {
-                    i,
-                    String.Format("{0:#,0}", item.Time.Subtract(context.Timestamp).TotalMilliseconds),
-                    item.Duration.HasValue ? String.Format("{0:#,0}", item.Duration.Value.TotalMilliseconds) : null,
-                    item.Command,
-                    item.Params.Count > 0
-                        ? new[]{new object[]{"Name","Type","Value"}}.Concat(item.Params.Select(p => new object[]
+            var count = 0;
+            foreach (var item in items)
+            {
+                plugin.AddRow()
+                    .Column(count++)
+                    .Column(String.Format("{0:#,0}", item.Time.Subtract(requestContext.Timestamp).TotalMilliseconds))
+                    .Column(item.Duration.HasValue ? String.Format("{0:#,0}", item.Duration.Value.TotalMilliseconds) : null)
+                    .Column(item.Command)
+                    .Column(item.Params.Count > 0
+                        ? new[] { new object[] { "Name", "Type", "Value" } }.Concat(item.Params.Select(p => new object[]
                             {
                                 p.Name,
                                 p.Type,
                                 p.Value,
                             }))
-                        : null
-                }));
-
-            return data;
-        }
-
-        private static readonly GlimpseStructuredLayout _structuredLayout = new GlimpseStructuredLayout
-        {
-            new GlimpseStructuredLayoutSection
-            {
-                new GlimpseStructuredLayoutCell
-                {
-                    Data = 0,
-                    Width = "30px",
-                },
-                new GlimpseStructuredLayoutCell
-                {
-                    Data = 1,
-                    Width = "75px",
-                    Align = "right",
-                    Prefix = "T+ ",
-                    Postfix = " ms",
-                },
-                new GlimpseStructuredLayoutCell
-                {
-                    Data = 2,
-                    Width = "65px",
-                    Align = "right",
-                    Postfix = " ms",
-                },
-                new GlimpseStructuredLayoutCell
-                {
-                    Data = 3,
-                    Width = "65%",
-                    IsCode = true,
-                    CodeType = "sql",
-                    SuppressAutoPreview = false,
-                },
-                new GlimpseStructuredLayoutCell
-                {
-                    Data = 4,
-                    Width = "270px",
-                    Limit = 0,
-                    Structure = new GlimpseStructuredLayout
-                    {
-                        new GlimpseStructuredLayoutSection
-                        {
-                            new GlimpseStructuredLayoutCell
-                            {
-                                Data = 0,
-                                Width = "50px",
-                            },
-                            new GlimpseStructuredLayoutCell
-                            {
-                                Data = 1,
-                                Width = "60px",
-                            },
-                            new GlimpseStructuredLayoutCell
-                            {
-                                Data = 2,
-                                Width = "120px",
-                            },
-                        },
-                    }
-                },
+                        : null);
             }
-        };
 
-        public GlimpseStructuredLayout StructuredLayout
-        {
-            get { return _structuredLayout; }
+            return plugin;
         }
+
+        public object GetLayout()
+        {
+            return Layout;
+        }
+
+        private static readonly object Layout = TabLayout.Create()
+            .Row(r =>
+            {
+                r.Cell(0).WidthInPixels(30).AsKey();
+                r.Cell(1).WidthInPixels(75).AlignRight().Prefix("T+ ").Suffix(" ms");
+                r.Cell(2).WidthInPixels(65).AlignRight().Suffix(" ms");
+                r.Cell(3).WidthInPercent(65).AsCode(CodeType.Sql);
+                r.Cell(4).WidthInPixels(270).LimitTo(1).SetLayout(TabLayout.Create()
+                    .Row(x =>
+                    {
+                        x.Cell(0).WidthInPixels(50);
+                        x.Cell(1).WidthInPixels(60);
+                        x.Cell(2).WidthInPixels(120);
+                    }));
+            }).Build();
     }
 }
