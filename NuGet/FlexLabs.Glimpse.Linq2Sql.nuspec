@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>FlexLabs.Glimpse.Linq2Sql</id>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
         <title>Glimpse for Linq2Sql</title>
         <authors>Artiom Chilaru</authors>
         <owners />
@@ -11,8 +11,8 @@
         <description>Linq2Sql tracing plugin for Glimpse</description>
         <tags>Glimpse Linq Linq2Sql</tags>
         <dependencies>
-            <dependency id="Glimpse" version="1.3.0" />
-            <dependency id="Glimpse.AspNet" version="1.2.1" />
+            <dependency id="Glimpse" version="1.8.4" />
+            <dependency id="Glimpse.AspNet" version="1.8.1" />
         </dependencies>
     </metadata>
     <files>
