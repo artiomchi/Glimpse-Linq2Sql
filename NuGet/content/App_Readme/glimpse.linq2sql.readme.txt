@@ -18,6 +18,9 @@ To enable support for Linq2SQL tracing you have to attach tracers to your contex
 
 Release Notes
 -------------
+17/03/2014 - 1.3.0
+- Upgraded to Glimpse 1.8.4
+
 01/05/2013 - 1.2.0
 - Upgraded to Glimpse 1.3
 
