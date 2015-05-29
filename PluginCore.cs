@@ -22,6 +22,9 @@ namespace FlexLabs.Glimpse.Linq2Sql
             var requestContext = context.GetRequestContext<HttpContextBase>();
             List<LogItem> items = LogItemHandler.GetLogList(requestContext);
 
+            if (items == null)
+                return plugin;
+
             var count = 0;
             foreach (var item in items)
             {
@@ -54,7 +57,7 @@ namespace FlexLabs.Glimpse.Linq2Sql
                 r.Cell(0).WidthInPixels(30).AsKey();
                 r.Cell(1).WidthInPixels(75).AlignRight().Prefix("T+ ").Suffix(" ms");
                 r.Cell(2).WidthInPixels(65).AlignRight().Suffix(" ms");
-                r.Cell(3).WidthInPercent(65).AsCode(CodeType.Sql);
+                r.Cell(3).WidthInPercent(65).AsCode(CodeType.Sql).DisablePreview();
                 r.Cell(4).WidthInPixels(270).LimitTo(1).SetLayout(TabLayout.Create()
                     .Row(x =>
                     {
