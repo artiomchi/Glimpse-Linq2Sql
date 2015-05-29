@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Keys\FlexLabsStrongKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Glimpse.AspNet, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -76,9 +82,6 @@
     <Content Include="NuGet\content\App_Readme\glimpse.linq2sql.readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin\signtool.exe" sign /t http://timestamp.digicert.com /a FlexLabs.Glimpse.Linq2Sql.dll</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -86,4 +89,17 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="SignOutput" AfterTargets="CoreCompile">
+    <PropertyGroup>
+      <TimeStampServerUrl>http://timestamp.digicert.com</TimeStampServerUrl>
+      <CertificateCriteria>/n "Artiom Chilaru"</CertificateCriteria>
+    </PropertyGroup>
+    <ItemGroup>
+      <SignableFiles Include="$(ProjectDir)obj\$(ConfigurationName)\$(TargetName)$(TargetExt)" />
+    </ItemGroup>
+    <GetFrameworkSdkPath>
+      <Output TaskParameter="Path" PropertyName="SdkPath" />
+    </GetFrameworkSdkPath>
+    <Exec Command="&quot;$(SdkPath)Bin\signtool.exe&quot; sign $(CertificateCriteria) /t &quot;$(TimestampServerUrl)&quot; /a &quot;%(SignableFiles.Identity)&quot;" />
+  </Target>
 </Project>
