@@ -30,12 +30,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Keys\FlexLabsStrongKey.pfx</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Glimpse.AspNet, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,11 +69,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NuGet\FlexLabs.Glimpse.Linq2Sql.nuspec" />
-    <None Include="NuGet\tools\install.ps1" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NuGet\content\App_Readme\glimpse.linq2sql.readme.txt" />
+    <Content Include="NuGet\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
